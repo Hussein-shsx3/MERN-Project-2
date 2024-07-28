@@ -1,12 +1,12 @@
 import express from "express";
 import User from "../models/Users.js";
 import { auth } from "../middleware/tokenMiddleware.js";
-import { isAdmin } from "../middleware/tokenMiddleware.js";
+import { isAdmin } from "../middleware/adminMiddleware.js";
 
 const router = express.Router();
 
 //* Get all users
-router.get("/", auth, isAdmin, async (req, res, next) => {
+router.get("/all", auth, isAdmin, async (req, res, next) => {
   try {
     //* Find users
     const findUsers = await User.find();
@@ -21,11 +21,10 @@ router.get("/", auth, isAdmin, async (req, res, next) => {
 });
 
 //*  Get only one user
-router.get("/:userId", auth, async (req, res, next) => {
-  const userId = req.params.userId;
+router.get("/", auth, async (req, res, next) => {
   try {
     //* Find user
-    const findUser = await User.findById(userId);
+    const findUser = await User.findById(req.user.id);
     if (!findUser) {
       return res.status(400).send("Users not found!");
     } else {
@@ -37,14 +36,12 @@ router.get("/:userId", auth, async (req, res, next) => {
 });
 
 //* Update user
-router.put("/:userId", auth, async (req, res, next) => {
-  const userId = req.params.userId;
+router.put("/", auth, async (req, res, next) => {
   const hashedPassword = await bcrypt.hash(req.body.password, 10);
   try {
     //* Find user and update
-    const updateUser = await User.findByIdAndUpdate(userId, {
+    const updateUser = await User.findByIdAndUpdate(req.user.id, {
       name: req.body.name,
-
       password: hashedPassword,
       image: req.body.image,
     });
@@ -59,11 +56,10 @@ router.put("/:userId", auth, async (req, res, next) => {
 });
 
 //* Delete user
-router.delete("/:userId", auth, async (req, res, next) => {
-  const userId = req.params.userId;
+router.delete("/", auth, async (req, res, next) => {
   try {
     //* Find user and delete
-    const findUser = await User.findByIdAndDelete(userId);
+    const findUser = await User.findByIdAndDelete(req.user.id);
     if (!findUser) {
       return res.status(400).send("User not found!");
     } else {
