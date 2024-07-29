@@ -7,6 +7,7 @@ import { errorHandler, notFound } from "./middleware/errorMiddleware.js";
 import registerRoute from "./routes/register.js";
 import authRoute from "./routes/auth.js";
 import usersRoute from "./routes/usersRoute.js";
+import verifyEmail from "./routes/verifyEmail.js";
 
 const app = express();
 
@@ -22,6 +23,7 @@ dotenv.config();
 app.use("/api/register", registerRoute);
 app.use("/api/auth", authRoute);
 app.use("/api/users", usersRoute);
+app.use("/api/verify", verifyEmail);
 
 app.use(errorHandler);
 app.use(notFound);

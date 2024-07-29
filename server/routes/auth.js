@@ -24,6 +24,7 @@ router.post("/", async (req, res, next) => {
           name: findUser.name,
           email: findUser.email,
           role: findUser.role,
+          isVerified: findUser.isVerified,
         },
         token,
       });
