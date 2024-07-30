@@ -24,7 +24,7 @@ router.get("/all", auth, isAdmin, async (req, res, next) => {
 router.get("/", auth, async (req, res, next) => {
   try {
     //* Find user
-    const findUser = await User.findById(req.user.id);
+    const findUser = await User.findById(req.user.id).populate("friends");;
     if (!findUser) {
       return res.status(400).send("Users not found!");
     } else {
@@ -41,12 +41,16 @@ router.put("/", auth, async (req, res, next) => {
   try {
     //* Find user and update
     const updateUser = await User.findByIdAndUpdate(req.user.id, {
-      name: req.body.name,
+      firstName: req.body.firstName,
+      lastName: req.body.lastName,
+      email: req.body.email,
       password: hashedPassword,
-      image: req.body.image,
+      location: req.body.location,
+      profession: req.body.profession,
+      picturePath: req.body.picturePath,
     });
     if (updateUser) {
-      res.status(200).send("User updated successfully!"); //? if the user updated is already in the list?
+      res.status(200).send(updateUser); //? if the user updated is already in the list?
     } else {
       res.status(400).send("User not found!");
     }

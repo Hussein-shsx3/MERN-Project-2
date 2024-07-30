@@ -19,13 +19,7 @@ router.post("/", async (req, res, next) => {
         expiresIn: "1d",
       });
       res.status(200).json({
-        userDetails: {
-          id: findUser._id,
-          name: findUser.name,
-          email: findUser.email,
-          role: findUser.role,
-          isVerified: findUser.isVerified,
-        },
+        userDetails: findUser,
         token,
       });
     } else {

@@ -8,7 +8,7 @@ const commentsSchema = new mongoose.Schema(
     from: { type: String, required: true },
     replies: [
       {
-        rid: { type: mongoose.Schema.Types.ObjectId },
+        rid: { type: mongoose.Schema.Types.ObjectId }, //?
         userId: { type: Schema.Types.ObjectId, ref: "Users" },
         from: { type: String, required: true },
         replyAt: String,
@@ -20,7 +20,7 @@ const commentsSchema = new mongoose.Schema(
     ],
     likes: String,
   },
-  { timestamps: true }
+  { timestamps: true } //?
 );
 
 const Comments = new mongoose.model("Comments", commentsSchema);

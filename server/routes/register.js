@@ -20,7 +20,16 @@ const transporter = nodemailer.createTransport({
 //* Register Users
 router.post("/", async (req, res, next) => {
   try {
-    const { name, email, password } = req.body;
+    const {
+      firstName,
+      lastName,
+      email,
+      friends,
+      password,
+      location,
+      occupation,
+      picturePath,
+    } = req.body;
     //* find User
     const findUser = await User.findOne({ email });
     if (findUser) {
@@ -32,9 +41,16 @@ router.post("/", async (req, res, next) => {
 
     //* create new user
     const newUser = new User({
-      name,
+      firstName,
+      lastName,
       email,
       password: hashPassword,
+      location,
+      friends,
+      viewedProfile: Math.floor(Math.random() * 10000),
+      occupation,
+      impressions: Math.floor(Math.random() * 10000),
+      picturePath,
       role: email === process.env.ADMIN_EMAIL ? "admin" : "user",
       isVerified: false,
     });
