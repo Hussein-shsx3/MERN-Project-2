@@ -4,12 +4,11 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        mainColor: "#181f2b",
-        secondaryColor: "#1c2230",
-        textColor: "#bcc2c6",
-        hColor: "#fafefe",
-        buttonColor: "#69ded8",
-        urli: "url('./public/images/bg-curvy-desktop.svg')",
+        primary: "var(--color-primary)",
+        background: "var(--color-background)",
+        foreground: "var(--color-foreground)",
+        title: "var(--title-color)",
+        text: "var(--text-color)",
       },
       screens: {
         sm: "576px",

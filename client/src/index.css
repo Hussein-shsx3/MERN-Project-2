@@ -2,7 +2,78 @@
 @tailwind components;
 @tailwind utilities;
 
-*{
-  font-family: Roboto;
+
+@layer utilities {
+  * {
+    font-family: "Roboto", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+  }
+
+  :root {
+    --color-primary: #25cbef;
+    --color-background: #f3f3f3;
+    --color-foreground: #ffffff;
+    --text-color: #888888;
+    --title-color: #5b5b59;
+  }
+
+  .dark {
+    --color-primary: #25cbef;
+    --color-background: #0d0d0d;
+    --color-foreground: #181818;
+    --text-color: #919191;
+    --title-color: #d1d1d1;
+  }
+
+  .input {
+    @apply w-[100%] h-[45px] bg-background outline-none border-[3px] border-background my-[10px] px-[10px] focus:border-primary
+  }
+
+  .submit {
+    @apply w-[100%] h-[45px] bg-primary outline-none border-[3px] border-primary my-[10px] px-[10px] 
+  }
+
+  .file {
+    @apply w-[100%] h-[45px] outline-none text-text border-[3px] border-background bg-background my-[10px] focus:border-primary cursor-pointer
+  }
+
+  ::-webkit-file-upload-button {
+    @apply bg-primary border-none h-[42px] text-white mr-[10px]
+  }
 }
 
+.loader, .loader:before, .loader:after {
+  border-radius: 50%;
+  width: 2.5em;
+  height: 2.5em;
+  animation-fill-mode: both;
+  animation: bblFadInOut 1.8s infinite ease-in-out;
+}
+.loader {
+  color: var(--color-primary);
+  font-size: 6px;
+  position: relative;
+  text-indent: -9999em;
+  transform: translateZ(0);
+  animation-delay: -0.16s;
+}
+.loader:before,
+.loader:after {
+  content: '';
+  position: absolute;
+  top: 0;
+}
+.loader:before {
+  left: -3.5em;
+  animation-delay: -0.32s;
+}
+.loader:after {
+  left: 3.5em;
+}
+
+@keyframes bblFadInOut {
+  0%, 80%, 100% { box-shadow: 0 2.5em 0 -1.3em }
+  40% { box-shadow: 0 2.5em 0 0 }
+}
+    

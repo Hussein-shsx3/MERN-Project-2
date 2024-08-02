@@ -21,7 +21,7 @@ app.use(
 dotenv.config();
 
 app.use("/api/register", registerRoute);
-app.use("/api/auth", authRoute);
+app.use("/api/login", authRoute);
 app.use("/api/users", usersRoute);
 app.use("/api/verify", verifyEmail);
 

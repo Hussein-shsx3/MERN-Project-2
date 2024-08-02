@@ -13,7 +13,7 @@ const UsersSchema = new mongoose.Schema(
     },
     picturePath: { type: String, default: "" },
     password: { type: String, required: true, min: 6 },
-    friends: { type: Array, default: [] },
+    friends: [{ type: Schema.Types.ObjectId, ref: "User" }],
     location: String,
     occupation: String,
     viewedProfile: String,
@@ -24,6 +24,6 @@ const UsersSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-const Users = new mongoose.model("Users", UsersSchema);
+const User = new mongoose.model("User", UsersSchema);
 
-export default Users;
+export default User;
