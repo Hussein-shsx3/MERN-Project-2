@@ -40,8 +40,6 @@ const SignUp = () => {
   };
 
   const uploadFile = async () => {
-    console.log("Starting file upload...");
-    const startTime = Date.now();
     setLoading(true);
     const data = new FormData();
     data.append("file", imageUrl);
@@ -58,8 +56,6 @@ const SignUp = () => {
       );
       const secure_url = response.data.secure_url;
       setLoading(false);
-      const endTime = Date.now();
-      console.log(`File upload completed in ${endTime - startTime} ms`);
       return secure_url;
     } catch (err) {
       setLoading(false);
@@ -69,17 +65,17 @@ const SignUp = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Form submitted...");
-    const startTime = Date.now();
     setAccept(true);
     if (imageUrl) {
       const picturePath = await uploadFile();
-      dispatch(register({ ...formData, picturePath }));
+      if (picturePath) {
+        dispatch(register({ ...formData, picturePath }));
+      } else {
+        console.log("error uploading file");
+      }
     } else {
-      dispatch(register(formData));
+      console.log("imageUrl not found");
     }
-    const endTime = Date.now();
-    console.log(`Form submission handled in ${endTime - startTime} ms`);
   };
   return (
     <section
@@ -166,9 +162,7 @@ const SignUp = () => {
           {accept && formData.password.length < 8 && (
             <p className="text-red-600">Your password is weak</p>
           )}
-          { error && (
-            <p className="text-red-600">File size exceeds 2MB</p>
-          )}
+          {error && <p className="text-red-600">File size exceeds 2MB</p>}
           {authState.status === "succeeded" && (
             <p className="text-green-500">
               Verification email sent. Please check your Gmail.

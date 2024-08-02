@@ -4,7 +4,7 @@ import App from "./App";
 import "./index.css";
 import SignIn from "./Pages/signIn";
 import SignUp from "./Pages/signUp";
-
+import IsVerified from "./Components/isVerified";
 //* redux toolkit
 import { storeApp } from "./Store";
 import { Provider } from "react-redux";
@@ -22,6 +22,10 @@ const router = createBrowserRouter([
   {
     path: "/signUp",
     element: <SignUp />,
+  },
+  {
+    path: "/isVerified/:userId",
+    element: <IsVerified />,
   },
 ]);
 

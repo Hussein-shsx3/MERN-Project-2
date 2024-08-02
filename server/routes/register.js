@@ -2,7 +2,6 @@ import express from "express";
 import User from "../models/Users.js";
 import bcrypt from "bcrypt";
 import nodemailer from "nodemailer";
-import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 
 dotenv.config();
@@ -55,22 +54,18 @@ router.post("/", async (req, res, next) => {
       isVerified: false,
     });
 
-    const token = jwt.sign({ id: newUser._id }, process.env.TOKEN_KAY, {
-      expiresIn: "1d",
-    });
-
-    //* send the email verify
-    const url = `http://localhost:3000/verify/${token}`;
-    transporter.sendMail({
-      from: process.env.ADMIN_EMAIL,
-      to: newUser.email,
-      subject: "Verify your email",
-      html: `<a href="${url}">Click here to verify your email</a>`,
-    });
-
     await newUser.save();
 
-    res.status(201).json({ userDetails: newUser, token });
+        //* send the email verify
+        const url = `http://localhost:3000/isVerified/${newUser._id}`;
+        transporter.sendMail({
+          from: process.env.ADMIN_EMAIL,
+          to: newUser.email,
+          subject: "Verify your email",
+          html: `<a href="${url}">Click here to verify your email</a>`,
+        });
+
+    res.status(201).json({ userDetails: newUser });
   } catch (err) {
     next(err);
   }

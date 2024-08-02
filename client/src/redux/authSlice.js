@@ -1,9 +1,13 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { register, login } from "../Api/authApi";
+import Cookies from "universal-cookie";
+
+const cookies = new Cookies();
 
 const initialState = {
   user: null,
-  token: null,
+  token: cookies.get("token") || null,
+  verify: cookies.get("isVerified") || null,
   status: "idle",
   error: null,
 };
@@ -15,6 +19,8 @@ const authSlice = createSlice({
     logout: (state) => {
       state.user = null;
       state.token = null;
+      cookies.remove("token", { path: "/" });
+      cookies.remove("isVerified", { path: "/" });
     },
   },
   extraReducers: (builder) => {
@@ -26,6 +32,7 @@ const authSlice = createSlice({
         state.status = "succeeded";
         state.user = action.payload.userDetails;
         state.token = action.payload.token;
+        cookies.set("token", action.payload.token, { path: "/" });
       })
       .addCase(register.rejected, (state, action) => {
         state.status = "failed";
@@ -38,6 +45,11 @@ const authSlice = createSlice({
         state.status = "succeeded";
         state.user = action.payload.userDetails;
         state.token = action.payload.token;
+        cookies.set("token", action.payload.token, { path: "/" });
+        state.verify = action.payload.userDetails.isVerified;
+        cookies.set("isVerified", action.payload.userDetails.isVerified, {
+          path: "/",
+        });
       })
       .addCase(login.rejected, (state, action) => {
         state.status = "failed";
