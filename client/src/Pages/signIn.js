@@ -73,10 +73,10 @@ const SignIn = () => {
             <input
               className="submit text-white cursor-pointer"
               type="submit"
-              value="Sign Up"
+              value="Sign In"
             />
           )}
-          {accept && error && (<p>error</p>)}
+          {accept && error && (<p className="text-red-600">Invalid email or password. Please try again.</p>)}
           <div className="w-full text-text gap-2 flex" to="/signIn">
             <p>If you dont have account ? </p>
             <Link to="/signUp" className="text-primary">

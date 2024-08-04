@@ -1,19 +1,15 @@
 import React, { useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { setMode } from "./redux/themeSlice";
+import { useSelector } from "react-redux";
 import Cookies from "universal-cookie";
 import { useNavigate } from "react-router-dom";
+import Header from "./Components/header";
 
 const App = () => {
   const cookies = new Cookies();
-  const dispatch = useDispatch();
   const theme = useSelector((state) => state.theme);
   const token = cookies.get("token");
   const isVerified = cookies.get("isVerified");
   const navigate = useNavigate();
-  const toggleTheme = () => {
-    dispatch(setMode());
-  };
 
   useEffect(() => {
     if (!isVerified || !token) {
@@ -22,12 +18,8 @@ const App = () => {
   }, [isVerified, token, navigate]);
 
   return (
-    <section className={`${theme.mode} bg-background`}>
-      {isVerified && token ? (
-        <h1 className="text-text" onClick={toggleTheme}>
-          hello
-        </h1>
-      ) : null}
+    <section className={`${theme.mode} bg-background h-[100vh] overflow-hidden`}>
+      {isVerified && token ? <Header /> : null}
     </section>
   );
 };
