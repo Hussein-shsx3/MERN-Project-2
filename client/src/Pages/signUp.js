@@ -114,7 +114,8 @@ const SignUp = () => {
           <input
             className="input"
             type="text"
-            placeholder="Locatin"
+            placeholder="Location"
+            name="location"
             onChange={handleChange}
             required
           />
@@ -122,6 +123,7 @@ const SignUp = () => {
             className="input"
             type="text"
             placeholder="Occupation"
+            name="occupation"
             onChange={handleChange}
             required
           />

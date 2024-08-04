@@ -1,90 +1,88 @@
 import express from "express";
 import User from "../models/Users.js";
-import FriendRequest from "../models/request.js";
 import { auth } from "../middleware/tokenMiddleware.js";
 
 const router = express.Router();
 
 // Send a friend request
-router.post("/send/:receiverId", auth, async (req, res, next) => {
-  const senderId = req.user.id;
-  const receiverId = req.params.receiverId;
-
+router.post("/send-request/:id", auth, async (req, res, next) => {
   try {
-    //* Check if the receiver exists
-    const receiver = await User.findById(receiverId);
-    if (!receiver) {
-      return res.status(404).json({ message: "Receiver not found" });
+    const { id } = req.params;
+    const user = await User.findById(req.user.id);
+    const friend = await User.findById(id);
+
+    if (!friend) {
+      return res.status(404).json({ message: "User not found" });
     }
 
-    //* Check if a request is already pending or if they are already friends
-    const existingRequest = await FriendRequest.findOne({
-      sender: senderId,
-      receiver: receiverId,
-    });
-    if (existingRequest) {
-      return res
-        .status(400)
-        .json({ message: "Friend request already sent or exists" });
+    if (user.friends.includes(id)) {
+      return res.status(400).json({ message: "Already friends" });
     }
 
-    const isAlreadyFriends =
-      (await User.findOne({ _id: senderId, friends: receiverId })) ||
-      (await User.findOne({ _id: receiverId, friends: senderId }));
+    // Assuming you have a friendRequests field in the User model to store pending requests
+    friend.friendRequests.push(user.id);
+    await friend.save();
 
-    if (isAlreadyFriends) {
-      return res.status(400).json({ message: "You are already friends" });
-    }
-
-    //* Create a new friend request
-    const newRequest = new FriendRequest({
-      sender: senderId,
-      receiver: receiverId,
-    });
-
-    await newRequest.save();
-    res.status(201).json({ message: "Friend request sent" });
+    res.status(200).json({ message: "Friend request sent" });
   } catch (err) {
     next(err);
   }
 });
 
-//* Accept a friend request
-router.post("/accept/:requestId", auth, async (req, res, next) => {
-  const userId = req.user.id;
-  const requestId = req.params.requestId;
-
+router.post("/accept-request/:id", auth, async (req, res, next) => {
   try {
-    // Find the friend request
-    const request = await FriendRequest.findById(requestId);
-    if (!request) {
-      return res.status(404).json({ message: "Friend request not found" });
+    const { id } = req.params;
+    const user = await User.findById(req.user.id);
+    const friend = await User.findById(id);
+
+    if (!friend) {
+      return res.status(404).json({ message: "User not found" });
     }
 
-    if (
-      request.receiver.toString() !== userId ||
-      request.status !== "pending"
-    ) {
-      return res.status(400).json({ message: "Request cannot be accepted" });
+    if (!user.friendRequests.includes(id)) {
+      return res
+        .status(400)
+        .json({ message: "No friend request from this user" });
     }
 
-    // Update the friend request status
-    request.status = "accepted";
-    await request.save();
+    user.friends.push(id);
+    friend.friends.push(user.id);
 
-    // Add each other to friends list
-    const sender = await User.findById(request.sender);
-    const receiver = await User.findById(request.receiver);
+    user.friendRequests = user.friendRequests.filter(
+      (requestId) => requestId.toString() !== id
+    );
 
-    if (sender && receiver) {
-      sender.friends.push(receiver._id);
-      receiver.friends.push(sender._id);
-
-      await sender.save();
-      await receiver.save();
-    }
+    await user.save();
+    await friend.save();
 
     res.status(200).json({ message: "Friend request accepted" });
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.delete("/remove/:id", auth, async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const user = await User.findById(req.user.id);
+    const friend = await User.findById(id);
+
+    if (!friend) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    user.friends = user.friends.filter(
+      (friendId) => friendId.toString() !== id
+    );
+
+    friend.friends = friend.friends.filter(
+      (friendId) => friendId.toString() !== user.id
+    );
+
+    await user.save();
+    await friend.save();
+
+    res.status(200).json({ message: "Friend removed" });
   } catch (err) {
     next(err);
   }

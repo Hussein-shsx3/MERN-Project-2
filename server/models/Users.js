@@ -14,6 +14,7 @@ const UsersSchema = new mongoose.Schema(
     picturePath: { type: String, default: "" },
     password: { type: String, required: true, min: 6 },
     friends: [{ type: Schema.Types.ObjectId, ref: "User" }],
+    friendRequests: [{ type: Schema.Types.ObjectId, ref: "User" }],
     location: String,
     occupation: String,
     viewedProfile: String,
