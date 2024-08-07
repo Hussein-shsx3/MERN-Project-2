@@ -4,73 +4,70 @@ import User from "../models/Users.js";
 import { auth } from "../middleware/tokenMiddleware.js";
 
 const router = express.Router();
+
+//* Create a new post
 router.post("/", auth, async (req, res, next) => {
-  const { description, picturePath } = req.body;
-
-  const userId = req.user.id;
-
   try {
-    const findUser = await User.findById(userId);
-    const newPost = new Post({
-      userId: userId,
-      firstName: findUser.firstName,
-      lastName: findUser.lastName,
-      location: findUser.location,
-      description,
-      picturePath,
-      userPicturePath: findUser.picturePath,
-      likes: {},
-      comments: [],
+    const post = new Post({
+      description: req.body.description,
+      user: req.body.userId,
     });
-
-    const savedPost = await newPost.save();
-
-    res.status(201).json(savedPost);
+    await post.save();
+    res.status(201).json(post);
   } catch (err) {
     next(err);
   }
 });
 
-//* get all posts
-router.get("/all", auth, async (req, res, next) => {
+//* Get all Posts
+router.post("/allPosts", auth, async (req, res, next) => {
   try {
-    const findPosts = await Post.find();
-    res.status(200).json(findPosts);
-  } catch (err) {
-    next(err);
-  }
-});
-
-//*  get user posts
-router.get("/", auth, async (req, res, next) => {
-  try {
-    const findPosts = await Post.find({ userId: req.user.id });
-    res.status(200).json(findPosts);
-  } catch (err) {
-    next(err);
-  }
-});
-
-//* likes
-router.get("/:postId", auth, async (req, res, next) => {
-  try {
-    const postId = req.params.postId;
-    const userId = req.user.id;
-
-    const findPost = await Post.findById(postId);
-    const isLiked = findPost.likes.get(userId);
-
-    if (isLiked) {
-      findPost.likes.delete(userId);
-    } else {
-      findPost.likes.set(userId, true);
+    const findAllPosts = await Post.find()
+      .populate({
+        path: "user",
+      })
+      .populate({
+        path: "comments",
+      });
+    if (!findAllPosts) {
+      return res.status(404).send("Posts not found!");
     }
-
-    await findPost.save(); // Save the updated post
-    res.status(200).json(findPost);
+    res.status(200).json(findAllPosts);
   } catch (err) {
     next(err);
   }
 });
+
+//* Get all Posts for one user
+router.post("/allPosts", auth, async (req, res, next) => {
+  try {
+    const findUser = await User.findById(req.user.id);
+    const findAllPosts = await Post.find({ user: findUser })
+      .populate({
+        path: "user",
+      })
+      .populate({
+        path: "comments",
+      });
+    if (!findAllPosts) {
+      return res.status(404).send("Posts not found!");
+    }
+    res.status(200).json(findAllPosts);
+  } catch (err) {
+    next(err);
+  }
+});
+
+//* Delete a post
+router.delete("/:id", auth, async (req, res, next) => {
+  try {
+    const post = await Post.findByIdAndDelete(req.params.id);
+    res.json({ message: "Post deleted", post });
+  } catch (err) {
+    next(err);
+  }
+});
+
+module.exports = router;
 
 export default router;
