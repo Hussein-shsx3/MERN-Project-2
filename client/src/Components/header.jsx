@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { logout } from "../redux/authSlice";
 import { setMode } from "../redux/themeSlice";
@@ -26,7 +26,7 @@ const Header = () => {
 
   return (
     <section
-      className={`${theme.mode} w-full h-[65px] flex justify-center items-center bg-foreground fixed top-0`}
+      className={`${theme.mode} w-full h-[65px] flex justify-center items-center bg-foreground fixed top-0 z-10`}
     >
       <div className="container relative w-[95%] sm:w-full flex items-center justify-between">
         <h1 className="text-[25px] font-bold text-primary mr-[15px]">Sociopedia</h1>

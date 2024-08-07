@@ -24,7 +24,13 @@ router.get("/all", auth, async (req, res, next) => {
 router.get("/", auth, async (req, res, next) => {
   try {
     //* Find user
-    const findUser = await User.findById(req.user.id).populate("friends");
+    const findUser = await User.findById(req.user.id)
+      .populate({
+        path: "friendRequests",
+      })
+      .populate({
+        path: "friends",
+      });
     if (!findUser) {
       return res.status(404).send("Users not found!");
     } else {

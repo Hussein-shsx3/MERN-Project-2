@@ -10,9 +10,10 @@ router.post("/", async (req, res, next) => {
     const { email, password } = req.body;
     //* find User
     const findUser = await User.findOne({ email });
-    if (!findUser) {
+    if (!findUser || findUser.isVerified === false) {
       return res.status(404).send("User not found!");
     }
+
     const passwordMatch = await bcrypt.compare(password, findUser.password);
     if (passwordMatch) {
       const token = jwt.sign({ id: findUser._id }, process.env.TOKEN_KAY, {

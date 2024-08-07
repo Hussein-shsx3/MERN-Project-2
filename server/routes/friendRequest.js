@@ -19,6 +19,10 @@ router.post("/send-request/:id", auth, async (req, res, next) => {
       return res.status(400).json({ message: "Already friends" });
     }
 
+    if (friend.friendRequests.includes(user._id)) {
+      return res.status(400).json({ message: "Already sended request" });
+    }
+
     // Assuming you have a friendRequests field in the User model to store pending requests
     friend.friendRequests.push(user.id);
     await friend.save();
@@ -56,6 +60,34 @@ router.post("/accept-request/:id", auth, async (req, res, next) => {
     await friend.save();
 
     res.status(200).json({ message: "Friend request accepted" });
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.post("/ignore-request/:id", auth, async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const user = await User.findById(req.user.id);
+    const friend = await User.findById(id);
+
+    if (!friend) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    if (!user.friendRequests.includes(id)) {
+      return res
+        .status(400)
+        .json({ message: "No friend request from this user" });
+    }
+
+    user.friendRequests = user.friendRequests.filter(
+      (requestId) => requestId.toString() !== id
+    );
+
+    await user.save();
+
+    res.status(200).json({ message: "Friend request ignored" });
   } catch (err) {
     next(err);
   }

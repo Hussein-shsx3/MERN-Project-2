@@ -1,16 +1,14 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { getUser } from "../Api/userApi";
-import Cookies from "universal-cookie";
-
-const cookies = new Cookies();
 
 const initialState = {
   user: null,
+  message: "",
   status: "idle",
 };
 
-const userSlice = createSlice({
-  name: "emailVerification",
+const getUserSlice = createSlice({
+  name: "getUser",
   initialState,
   reducers: {},
   extraReducers: (builder) => {
@@ -21,12 +19,12 @@ const userSlice = createSlice({
       .addCase(getUser.fulfilled, (state, action) => {
         state.status = "succeeded";
         state.user = action.payload;
-        cookies.set("user", state.user);
       })
       .addCase(getUser.rejected, (state, action) => {
         state.status = "failed";
+        state.message = action.payload;
       });
   },
 });
 
-export default userSlice.reducer;
+export default getUserSlice.reducer;

@@ -3,12 +3,12 @@ import { Link } from "react-router-dom";
 
 const UserDetails = ( props ) => {
   return (
-    <div className="flex gap-3 items-center mb-[16px]">
+    <div className="flex gap-2 items-center mb-[16px]">
       <Link>
         <img
           src={`${props.picturePath}`}
           alt=""
-          className="w-[50px] h-[50px] rounded-[100%]"
+          className="w-[45px] h-[45px] rounded-[100%]"
         />
       </Link>
       <div className="">

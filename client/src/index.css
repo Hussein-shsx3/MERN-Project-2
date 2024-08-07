@@ -28,7 +28,7 @@
   }
 
   .input {
-    @apply w-[100%] h-[45px] bg-background outline-none border-[3px] border-background my-[10px] px-[10px] focus:border-primary
+    @apply w-[100%] h-[45px] bg-background outline-none border-[3px] border-background my-[10px] px-[10px] focus:border-primary text-title
   }
 
   .submit {
@@ -47,16 +47,22 @@
     @apply absolute transition-all duration-75 z-[4] w-[250px] h-[300px] gap-7 pt-[60px] right-[20px] translate-y-[200px] md:translate-y-0 translate-x-[500px] md:translate-x-0 rounded-[20px] bg-foreground flex flex-col justify-start items-center md:pt-0 md:flex-row md:w-[100%] md:relative md:bg-transparent md:h-auto md:justify-between md:gap-0
   }
 
-  .listActive{
+  .listActive {
     @apply translate-x-0
   }
 
-  .blurActive{
+  .blurActive {
     @apply flex
   }
 }
 
-.loader, .loader:before, .loader:after {
+.scrollHidden::-webkit-scrollbar {
+  display: none;
+}
+
+.loader,
+.loader:before,
+.loader:after {
   border-radius: 50%;
   width: 2.5em;
   height: 2.5em;

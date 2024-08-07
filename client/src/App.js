@@ -1,10 +1,13 @@
 import React, { useEffect } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Cookies from "universal-cookie";
 import { useNavigate } from "react-router-dom";
 import Header from "./Components/header";
 import UserProfile from "./Components/userProfile";
 import Friends from "./Components/friends";
+import Sponsored from "./Components/sponsored";
+import { getUser } from "./Api/userApi";
+import FriendRequest from "./Components/friendRequest";
 
 const App = () => {
   const cookies = new Cookies();
@@ -12,7 +15,8 @@ const App = () => {
   const token = cookies.get("token");
   const isVerified = cookies.get("isVerified");
   const navigate = useNavigate();
-
+  const dispatch = useDispatch();
+  dispatch(getUser());
   useEffect(() => {
     if (!isVerified || !token) {
       navigate("/signIn");
@@ -21,15 +25,22 @@ const App = () => {
 
   return (
     <section
-      className={`${theme.mode} bg-background h-[110vh] overflow-hidden w-full flex justify-center pt-[90px]`}
+      className={`${theme.mode} bg-background w-full flex justify-center pt-[80px]`}
     >
       {isVerified && token ? (
         <div className="w-full flex flex-col items-center">
-          <Header />
-          <div className="container w-[95%] md:w-full">
-            <div className="w-[100%] lg:w-[23%] flex flex-col items-center">
+          <div className="w-full flex flex-col items-center overflow-hidden">
+            <Header />
+          </div>
+          <div className="container w-[95%] md:w-full flex flex-col md:flex-row justify-between items-start">
+            <div className="h-[100%] w-full md:w-auto">
               <UserProfile />
               <Friends />
+            </div>
+            <h1 className="h-[250vh]">hello</h1>
+            <div className="h-[100%]">
+              <Sponsored />
+              <FriendRequest />
             </div>
           </div>
         </div>

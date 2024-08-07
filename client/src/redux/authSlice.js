@@ -19,6 +19,7 @@ const authSlice = createSlice({
     logout: (state) => {
       state.user = null;
       state.token = null;
+      cookies.remove("user", { path: "/" });
       cookies.remove("token", { path: "/" });
       cookies.remove("isVerified", { path: "/" });
     },
