@@ -11,7 +11,7 @@ const getUser = createAsyncThunk("user", async (userData, thunkAPI) => {
       `${process.env.REACT_APP_API_URL}/api/users`,
       {
         headers: {
-          Authorization: `Bearer ${token}`, // Include the token in the header
+          Authorization: `Bearer ${token}`,
         },
       }
     );

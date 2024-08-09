@@ -9,6 +9,7 @@ import authRoute from "./routes/auth.js";
 import usersRoute from "./routes/usersRoute.js";
 import friendRequestRoute from "./routes/friendRequest.js";
 import verifyEmail from "./routes/verifyEmail.js";
+import postsRoute from "./routes/postsRoute.js";
 
 const app = express();
 
@@ -26,6 +27,7 @@ app.use("/api/login", authRoute);
 app.use("/api/users", usersRoute);
 app.use("/api/verify", verifyEmail);
 app.use("/api/friendRequest", friendRequestRoute);
+app.use("/api/posts", postsRoute);
 
 app.use(errorHandler);
 app.use(notFound);

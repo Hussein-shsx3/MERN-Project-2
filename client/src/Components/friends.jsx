@@ -14,7 +14,7 @@ const Friends = () => {
 
   useEffect(() => {
     dispatch(getUser());
-  }, [dispatch, handleRemove]);
+  }, [dispatch]);
 
   if (!user) {
     return <div></div>; //* Handle case when user data is not available
@@ -38,7 +38,7 @@ const Friends = () => {
   });
 
   return (
-    <section className="sticky top-[509px] bottom-0 bg-foreground w-[95%] max-h-[30dvh] p-[15px] md:w-[340px] min-w-[300px] rounded-[12px] overflow-hidden hover:overflow-y-scroll scrollHidden hidden flex-col xl:flex">
+    <section className="relative md:sticky top-5 md:top-[509px] bg-foreground w-[100%] max-h-[30dvh] p-[15px] lg:w-[340px] min-w-[300px] rounded-[12px] overflow-hidden hover:overflow-y-scroll scrollHidden flex flex-col">
       <div className="flex justify-between items-center">
         <h1 className="text-title">Friend List</h1>
         <p className="text-text">{user.friends.length}</p>

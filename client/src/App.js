@@ -8,6 +8,7 @@ import Friends from "./Components/friends";
 import Sponsored from "./Components/sponsored";
 import { getUser } from "./Api/userApi";
 import FriendRequest from "./Components/friendRequest";
+import CreatePost from "./Components/createPost";
 
 const App = () => {
   const cookies = new Cookies();
@@ -37,7 +38,9 @@ const App = () => {
               <UserProfile />
               <Friends />
             </div>
-            <h1 className="h-[250vh]">hello</h1>
+            <section className="w-[100%] md:w-[43%] h-[150dvh] flex flex-col items-center mt-5 md:mt-0">
+              <CreatePost />
+            </section>
             <div className="h-[100%]">
               <Sponsored />
               <FriendRequest />

@@ -2,7 +2,7 @@ import React from "react";
 
 const Sponsored = () => {
   return (
-    <section className="sticky hidden md:flex flex-col top-[80px] bg-foreground p-[15px] rounded-[12px] w-[95%] md:w-[340px]">
+    <section className="sticky hidden xl:flex flex-col top-[80px] bg-foreground p-[15px] rounded-[12px] w-[95%] md:w-[340px]">
       <div className="w-full flex justify-between items-center mb-[15px]">
         <p className="text-title text-[14px]">Sponsored</p>
         <p className="text-text text-[13px]">Create Ad</p>
