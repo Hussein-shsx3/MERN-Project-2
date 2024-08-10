@@ -27,7 +27,8 @@ router.get("/", auth, async (req, res, next) => {
     const findAllPosts = await Post.find({ user: findUser })
       .populate({
         path: "user",
-        select: "firstName lastName _id picturePath location",
+        select:
+          "firstName lastName _id picturePath location friendRequests friends",
       })
       .populate({
         path: "comments.user",
@@ -48,7 +49,8 @@ router.get("/allPosts", auth, async (req, res, next) => {
     const findAllPosts = await Post.find()
       .populate({
         path: "user",
-        select: "firstName lastName _id picturePath location",
+        select:
+          "firstName lastName _id picturePath location friendRequests friends",
       })
       .populate({
         path: "comments.user",
@@ -67,7 +69,7 @@ router.get("/allPosts", auth, async (req, res, next) => {
 router.delete("/:id", auth, async (req, res, next) => {
   try {
     const post = await Post.findByIdAndDelete(req.params.id);
-    res.json({ message: "Post was deleted"});
+    res.json({ message: "Post was deleted" });
   } catch (err) {
     next(err);
   }

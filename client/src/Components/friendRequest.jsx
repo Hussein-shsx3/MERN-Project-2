@@ -1,8 +1,7 @@
-import React, { useEffect } from "react";
+import React from "react";
 import UserDetails from "./userDetails";
 import { useDispatch, useSelector } from "react-redux";
 import { acceptRequest, ignoreRequest } from "../Api/friendRequestApi";
-import { getUser } from "../Api/userApi";
 
 const FriendRequest = () => {
   const user = useSelector((state) => state.user.user);
@@ -15,10 +14,6 @@ const FriendRequest = () => {
   const handleIgnore = (e) => {
     dispatch(ignoreRequest(e));
   };
-
-  useEffect(() => {
-    dispatch(getUser());
-  }, [dispatch, handleAccept, handleIgnore]);
 
   if (!user) {
     return (
@@ -35,7 +30,7 @@ const FriendRequest = () => {
           picturePath={friend.picturePath}
           firstName={friend.firstName}
           lastName={friend.lastName}
-          occupation={friend.occupation}
+          location={friend.location}
         />
         <i
           className="bx bx-check h-[35px] w-[35px] flex justify-center items-center rounded-[100%] text-text bg-background text-[20px] cursor-pointer translate-y-[-6px] ml-[40px] mr-[5px] transition-colors duration-100 hover:text-green-600"

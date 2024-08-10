@@ -9,6 +9,7 @@ import Sponsored from "./Components/sponsored";
 import { getUser } from "./Api/userApi";
 import FriendRequest from "./Components/friendRequest";
 import CreatePost from "./Components/createPost";
+import Posts from "./Components/posts";
 
 const App = () => {
   const cookies = new Cookies();
@@ -17,7 +18,11 @@ const App = () => {
   const isVerified = cookies.get("isVerified");
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  dispatch(getUser());
+  
+  useEffect(() => {
+    dispatch(getUser());
+  }, [dispatch]);
+
   useEffect(() => {
     if (!isVerified || !token) {
       navigate("/signIn");
@@ -34,12 +39,13 @@ const App = () => {
             <Header />
           </div>
           <div className="container w-[95%] md:w-full flex flex-col md:flex-row justify-between items-start">
-            <div className="h-[100%] w-full md:w-auto">
+            <div className="h-auto md:h-[100%] w-full md:w-auto">
               <UserProfile />
               <Friends />
             </div>
-            <section className="w-[100%] md:w-[43%] h-[150dvh] flex flex-col items-center mt-5 md:mt-0">
+            <section className="relative w-[100%] flex flex-col px-0 md:px-1 lg:px-5">
               <CreatePost />
+              <Posts />
             </section>
             <div className="h-[100%]">
               <Sponsored />
