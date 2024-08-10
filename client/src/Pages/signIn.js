@@ -1,12 +1,11 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { login } from "../Api/authApi";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const SignIn = () => {
   const theme = useSelector((state) => state.theme);
   const dispatch = useDispatch();
-  const navigate = useNavigate();
   const authState = useSelector((state) => state.auth);
 
   const [credentials, setCredentials] = useState({
@@ -26,7 +25,7 @@ const SignIn = () => {
     dispatch(login(credentials))
       .unwrap()
       .then(() => {
-        navigate("/"); // Redirect to a protected route on successful login
+        window.location.pathname = "/";
       })
       .catch((err) => {
         console.error("Login failed: ", err);
@@ -76,7 +75,11 @@ const SignIn = () => {
               value="Sign In"
             />
           )}
-          {accept && error && (<p className="text-red-600">Invalid email or password. Please try again.</p>)}
+          {accept && error && (
+            <p className="text-red-600">
+              Invalid email or password. Please try again.
+            </p>
+          )}
           <div className="w-full text-text gap-2 flex" to="/signIn">
             <p>If you dont have account ? </p>
             <Link to="/signUp" className="text-primary">

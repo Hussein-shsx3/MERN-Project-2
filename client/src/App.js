@@ -1,12 +1,11 @@
 import React, { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import Cookies from "universal-cookie";
 import { useNavigate } from "react-router-dom";
 import Header from "./Components/header";
 import UserProfile from "./Components/userProfile";
 import Friends from "./Components/friends";
 import Sponsored from "./Components/sponsored";
-import { getUser } from "./Api/userApi";
 import FriendRequest from "./Components/friendRequest";
 import CreatePost from "./Components/createPost";
 import Posts from "./Components/posts";
@@ -14,20 +13,16 @@ import Posts from "./Components/posts";
 const App = () => {
   const cookies = new Cookies();
   const theme = useSelector((state) => state.theme);
+  const status = useSelector((state) => state.user.status);
   const token = cookies.get("token");
   const isVerified = cookies.get("isVerified");
   const navigate = useNavigate();
-  const dispatch = useDispatch();
-  
-  useEffect(() => {
-    dispatch(getUser());
-  }, [dispatch]);
 
   useEffect(() => {
-    if (!isVerified || !token) {
+    if (!isVerified || !token || status === "failed") {
       navigate("/signIn");
     }
-  }, [isVerified, token, navigate]);
+  }, [isVerified, token, navigate, status]);
 
   return (
     <section

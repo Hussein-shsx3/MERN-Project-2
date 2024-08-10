@@ -57,10 +57,10 @@ const getAllPosts = createAsyncThunk("allPosts", async (postData, thunkAPI) => {
   }
 });
 
-const deletePost = createAsyncThunk("deletePost", async (post, thunkAPI) => {
+const deletePost = createAsyncThunk("deletePost", async (postId, thunkAPI) => {
   try {
     const response = await axios.delete(
-      `${process.env.REACT_APP_API_URL}/api/posts/${post.id}`,
+      `${process.env.REACT_APP_API_URL}/api/posts/${postId}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -75,10 +75,11 @@ const deletePost = createAsyncThunk("deletePost", async (post, thunkAPI) => {
 
 const createComment = createAsyncThunk(
   "createComment",
-  async (postId, thunkAPI) => {
+  async (commentData, thunkAPI) => {
     try {
       const response = await axios.post(
-        `${process.env.REACT_APP_API_URL}/api/posts/addComment/${postId}`,
+        `${process.env.REACT_APP_API_URL}/api/posts/addComment/${commentData.postId}`,
+        { text: commentData.text },
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -115,6 +116,7 @@ const likeToogle = createAsyncThunk("likeToogle", async (postId, thunkAPI) => {
   try {
     const response = await axios.post(
       `${process.env.REACT_APP_API_URL}/api/posts/${postId}/like`,
+      null,
       {
         headers: {
           Authorization: `Bearer ${token}`,

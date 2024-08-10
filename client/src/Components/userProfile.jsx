@@ -1,9 +1,16 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useSelector,useDispatch } from "react-redux";
+import { getUser } from "../Api/userApi";
 
 const UserProfile = () => {
   const user = useSelector((state) => state.user.user);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getUser());
+  }, [dispatch]);
+
 
   if (!user) {
     return (
