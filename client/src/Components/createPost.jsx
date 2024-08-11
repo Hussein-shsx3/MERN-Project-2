@@ -11,7 +11,7 @@ const CreatePost = (props) => {
     description: "",
     postImage: "",
   });
-  
+
   const MAX_FILE_SIZE = 2 * 1024 * 1024; // 2MB
 
   const user = useSelector((state) =>
@@ -21,6 +21,8 @@ const CreatePost = (props) => {
   );
 
   const myProfile = useSelector((state) => state.user.user);
+  const userStatus = useSelector((state) => state.user.status);
+  const postStatus = useSelector((state) => state.post.status);
   const dispatch = useDispatch();
 
   const handleFileChange = (e) => {
@@ -68,16 +70,12 @@ const CreatePost = (props) => {
         console.log("error uploading file");
       }
     } else {
-      console.log("imageUrl not found");
+      dispatch(createPost(formData));
     }
   };
 
-  if (!user || !myProfile) {
-    return (
-      <div className="w-full md:w-[340px] flex justify-center items-center">
-        <span className="loader"></span>
-      </div>
-    ); //* Handle case when user data is not available
+  if (!user || userStatus === "loading" || postStatus === "loading") {
+    return <div></div>;
   }
   return (
     <form

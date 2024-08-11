@@ -6,7 +6,6 @@ import { useParams } from "react-router-dom";
 
 const FriendRequest = (props) => {
   const { userId } = useParams();
-  console.log(userId);
   const user = useSelector((state) =>
     props.user === "userProfile"
       ? state.userProfile.userProfile
@@ -14,6 +13,8 @@ const FriendRequest = (props) => {
   );
   const dispatch = useDispatch();
   const myProfile = useSelector((state) => state.user.user);
+  const userStatus = useSelector((state) => state.user.status);
+  const postStatus = useSelector((state) => state.post.status);
 
   const handleAccept = (e) => {
     dispatch(acceptRequest(e));
@@ -23,7 +24,7 @@ const FriendRequest = (props) => {
     dispatch(ignoreRequest(e));
   };
 
-  if (!user || !myProfile) {
+  if (!user || userStatus === "loading" || postStatus === "loading") {
     return <div></div>;
   }
 

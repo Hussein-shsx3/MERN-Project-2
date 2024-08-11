@@ -14,12 +14,14 @@ const Friends = (props) => {
   );
   const dispatch = useDispatch();
   const myProfile = useSelector((state) => state.user.user);
+  const userStatus = useSelector((state) => state.user.status);
+  const postStatus = useSelector((state) => state.post.status);
 
   const handleRemove = async (id) => {
     dispatch(removeFriend(id));
   };
 
-  if (!user || !myProfile) {
+  if (!user || userStatus === "loading" || postStatus === "loading") {
     return <div></div>;
   }
 

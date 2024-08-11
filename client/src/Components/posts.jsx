@@ -20,6 +20,8 @@ const Posts = (props) => {
     props.postType === "allPosts" ? state.post.allPosts : state.post.userPosts
   );
   const user = useSelector((state) => state.user.user);
+  const userStatus = useSelector((state) => state.user.status);
+  const postStatus = useSelector((state) => state.post.status);
 
   const [commentData, setCommentData] = useState({
     postId: "",
@@ -30,7 +32,7 @@ const Posts = (props) => {
     props.postType === "allPosts"
       ? dispatch(getAllPosts())
       : dispatch(getUserPosts(userId));
-  }, [dispatch, posts, user, props.postType, userId]);
+  }, [dispatch, props.postType, userId]);
 
   const addFriend = (friendId) => {
     dispatch(sendRequest(friendId));
@@ -57,7 +59,7 @@ const Posts = (props) => {
     dispatch(createComment(commentData));
   };
 
-  if (!posts || !user) {
+  if (!user || !posts || userStatus === "loading" || postStatus === "loading") {
     return <div></div>;
   }
 
@@ -166,7 +168,9 @@ const Posts = (props) => {
     );
   });
 
-  return <section className="w-full">{showPosts}</section>;
+  return (
+    <section className="w-full flex flex-col-reverse">{showPosts}</section>
+  );
 };
 
 export default Posts;
