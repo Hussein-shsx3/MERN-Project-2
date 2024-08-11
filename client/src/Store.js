@@ -5,6 +5,7 @@ import emailVerificationSlice from "./redux/isVerifiedSlice";
 import friendRequestSlice from "./redux/friendRequestSlice";
 import userSlice from "./redux/userSlice";
 import getPostsSlice from "./redux/postSlice";
+import userProfileSlice from "./redux/userProfileSlice";
 
 export const storeApp = configureStore({
   reducer: {
@@ -13,6 +14,7 @@ export const storeApp = configureStore({
     emailVerified: emailVerificationSlice,
     friendRequest: friendRequestSlice,
     user: userSlice,
+    userProfile: userProfileSlice,
     post: getPostsSlice,
   },
 });

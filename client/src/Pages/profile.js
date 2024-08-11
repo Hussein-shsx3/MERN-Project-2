@@ -1,16 +1,18 @@
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import Cookies from "universal-cookie";
-import Header from "./Components/header";
-import UserProfile from "./Components/userProfile";
-import Friends from "./Components/friends";
-import Sponsored from "./Components/sponsored";
-import FriendRequest from "./Components/friendRequest";
-import CreatePost from "./Components/createPost";
-import Posts from "./Components/posts";
-import { getUser } from "./Api/userApi";
+import Header from "../Components/header";
+import UserProfile from "../Components/userProfile";
+import Sponsored from "../Components/sponsored";
+import CreatePost from "../Components/createPost";
+import Posts from "../Components/posts";
+import FriendRequest from "../Components/friendRequest";
+import Friends from "../Components/friends";
+import { getUser, getUserProfile } from "../Api/userApi";
+import { useParams } from "react-router-dom";
 
-const App = () => {
+const Profile = () => {
+  const { userId } = useParams();
   const cookies = new Cookies();
   const theme = useSelector((state) => state.theme);
   const status = useSelector((state) => state.user.status);
@@ -20,7 +22,8 @@ const App = () => {
 
   useEffect(() => {
     dispatch(getUser());
-  }, [dispatch]);
+    dispatch(getUserProfile(userId));
+  }, [dispatch, userId]);
 
   useEffect(() => {
     if (!isVerified || !token || status === "failed") {
@@ -39,16 +42,16 @@ const App = () => {
           </div>
           <div className="container w-[95%] md:w-full flex flex-col md:flex-row justify-between items-start">
             <div className="h-auto md:h-[100%] w-full md:w-auto">
-              <UserProfile user="none" />
-              <Friends user="" />
+              <UserProfile user="userProfile" />
+              <Friends user="userProfile" />
             </div>
             <section className="relative min-h-[100dvh] w-[100%] flex flex-col px-0 md:px-1 lg:px-5">
-              <CreatePost user="none" />
-              <Posts postType="allPosts" />
+              <CreatePost user="userProfile" />
+              <Posts postType="" />
             </section>
             <div className="h-[100%]">
               <Sponsored />
-              <FriendRequest user=" " />
+              <FriendRequest user="userProfile" />
             </div>
           </div>
         </div>
@@ -57,4 +60,4 @@ const App = () => {
   );
 };
 
-export default App;
+export default Profile;

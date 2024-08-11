@@ -2,32 +2,52 @@ import React from "react";
 import UserDetails from "./userDetails";
 import { useDispatch, useSelector } from "react-redux";
 import { removeFriend } from "../Api/friendRequestApi";
+import { useParams } from "react-router-dom";
 
-const Friends = () => {
-  const user = useSelector((state) => state.user.user);
+const Friends = (props) => {
+  const { userId } = useParams();
+
+  const user = useSelector((state) =>
+    props.user === "userProfile"
+      ? state.userProfile.userProfile
+      : state.user.user
+  );
   const dispatch = useDispatch();
+  const myProfile = useSelector((state) => state.user.user);
 
   const handleRemove = async (id) => {
     dispatch(removeFriend(id));
   };
 
-  if (!user) {
-    return <div></div>; //* Handle case when user data is not available
+  if (!user || !myProfile) {
+    return <div></div>;
   }
 
   const showFriends = user.friends.map((friend) => {
     return (
       <div key={friend._id} className="flex justify-between items-center">
         <UserDetails
+          userId={friend._id}
           picturePath={friend.picturePath}
           firstName={friend.firstName}
           lastName={friend.lastName}
           location={friend.location}
         />
-        <i
-          className="bx bx-user-minus h-[35px] w-[35px] flex justify-center items-center rounded-[100%] text-text bg-background text-[20px] cursor-pointer translate-y-[-6px] transition-colors duration-100 hover:text-red-500"
-          onClick={() => handleRemove(friend._id)}
-        ></i>
+        {props.user === "userProfile" ? (
+          myProfile._id === userId ? (
+            <i
+              className="bx bx-user-minus h-[35px] w-[35px] flex justify-center items-center rounded-[100%] text-text bg-background text-[20px] cursor-pointer translate-y-[-6px] transition-colors duration-100 hover:text-red-500"
+              onClick={() => handleRemove(friend._id)}
+            ></i>
+          ) : (
+            ""
+          )
+        ) : (
+          <i
+            className="bx bx-user-minus h-[35px] w-[35px] flex justify-center items-center rounded-[100%] text-text bg-background text-[20px] cursor-pointer translate-y-[-6px] transition-colors duration-100 hover:text-red-500"
+            onClick={() => handleRemove(friend._id)}
+          ></i>
+        )}
       </div>
     );
   });

@@ -3,15 +3,22 @@ import UserDetails from "./userDetails";
 import { useDispatch, useSelector } from "react-redux";
 import {
   getAllPosts,
+  getUserPosts,
   likeToogle,
   createComment,
   deletePost,
 } from "../Api/postsApi";
 import { sendRequest, removeFriend } from "../Api/friendRequestApi";
+import { Link } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
-const Posts = () => {
+const Posts = (props) => {
+  const { userId } = useParams();
+
   const dispatch = useDispatch();
-  const posts = useSelector((state) => state.post.allPosts);
+  const posts = useSelector((state) =>
+    props.postType === "allPosts" ? state.post.allPosts : state.post.userPosts
+  );
   const user = useSelector((state) => state.user.user);
 
   const [commentData, setCommentData] = useState({
@@ -20,8 +27,10 @@ const Posts = () => {
   });
 
   useEffect(() => {
-    dispatch(getAllPosts());
-  }, [dispatch, posts, user]);
+    props.postType === "allPosts"
+      ? dispatch(getAllPosts())
+      : dispatch(getUserPosts(userId));
+  }, [dispatch, posts, user, props.postType, userId]);
 
   const addFriend = (friendId) => {
     dispatch(sendRequest(friendId));
@@ -37,7 +46,6 @@ const Posts = () => {
 
   const likeToogles = (postId) => {
     dispatch(likeToogle(postId));
-    document.getElementById(`like-${postId}`).classList.toggle("text-red-700");
   };
 
   const commentToggle = (postId) => {
@@ -50,26 +58,26 @@ const Posts = () => {
   };
 
   if (!posts || !user) {
-    return (
-      <div className="w-full flex justify-center items-center">
-        <span className="loader"></span>
-      </div>
-    );
+    return <div></div>;
   }
 
   const showPosts = posts.map((post) => {
     const showComments = post.comments.map((comment) => {
       return (
         <div className="flex items-start gap-3 mb-3" key={comment._id}>
-          <img
-            src={comment.user.picturePath}
-            alt=""
-            className="w-[40px] h-[40px] rounded-[100%] object-cover"
-          />
+          <Link to={`/profile/${comment.user._id}`}>
+            <img
+              src={comment.user.picturePath}
+              alt=""
+              className="w-[40px] h-[40px] rounded-[100%] object-cover"
+            />
+          </Link>
           <div className="flex flex-col bg-background p-2 rounded-[12px]">
-            <p className="text-title text-[14px]">
-              {comment.user.firstName} {comment.user.lastName}
-            </p>
+            <Link to={`/profile/${comment.user._id}`}>
+              <p className="text-title text-[14px]">
+                {comment.user.firstName} {comment.user.lastName}
+              </p>
+            </Link>
             <p className="text-text text-[13px]">{comment.text}</p>
           </div>
         </div>
@@ -82,6 +90,7 @@ const Posts = () => {
       >
         <div className="flex items-center justify-between">
           <UserDetails
+            userId={post.user._id}
             picturePath={post.user.picturePath}
             firstName={post.user.firstName}
             lastName={post.user.lastName}
@@ -104,9 +113,7 @@ const Posts = () => {
             ></i>
           )}
         </div>
-        <p className="text-text text-[14px] ">
-          Some realy long random description.
-        </p>
+        <p className="text-text text-[14px] ">{post.description}</p>
         <img
           src={post.postImage}
           alt=""
@@ -115,10 +122,9 @@ const Posts = () => {
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <i
-              className={`bx bxs-heart text-text text-[20px] cursor-pointer h-[35px] w-[35px] flex justify-center items-center hover:bg-background rounded-[100%] transition-colors duration-75 ${
-                post.likes.includes(user._id) ? "text-red-700" : ""
+              className={`bx bxs-heart text-[20px] cursor-pointer h-[35px] w-[35px] flex justify-center items-center hover:bg-background rounded-[100%] transition-colors duration-75 ${
+                post.likes.includes(user._id) ? "text-red-700" : "text-text"
               } `}
-              id={`like-${post._id}`}
               onClick={() => likeToogles(post._id)}
             ></i>
             <p className="text-text text-[14px]">{post.likes.length}</p>
@@ -160,7 +166,7 @@ const Posts = () => {
     );
   });
 
-  return <section className="w-full mt-5">{showPosts}</section>;
+  return <section className="w-full">{showPosts}</section>;
 };
 
 export default Posts;

@@ -21,4 +21,20 @@ const getUser = createAsyncThunk("user", async (userData, thunkAPI) => {
   }
 });
 
-export { getUser };
+const getUserProfile = createAsyncThunk("userProfile", async (userId, thunkAPI) => {
+  try {
+    const response = await axios.get(
+      `${process.env.REACT_APP_API_URL}/api/users/${userId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    return thunkAPI.rejectWithValue(error.response.data);
+  }
+});
+
+export { getUser, getUserProfile };

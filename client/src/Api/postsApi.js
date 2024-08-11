@@ -22,24 +22,21 @@ const createPost = createAsyncThunk("posts", async (postData, thunkAPI) => {
   }
 });
 
-const getUserPosts = createAsyncThunk(
-  "userPosts",
-  async (postData, thunkAPI) => {
-    try {
-      const response = await axios.get(
-        `${process.env.REACT_APP_API_URL}/api/posts`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      return response.data;
-    } catch (error) {
-      return thunkAPI.rejectWithValue(error.response.data);
-    }
+const getUserPosts = createAsyncThunk("userPosts", async (userId, thunkAPI) => {
+  try {
+    const response = await axios.get(
+      `${process.env.REACT_APP_API_URL}/api/posts/${userId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    return thunkAPI.rejectWithValue(error.response.data);
   }
-);
+});
 
 const getAllPosts = createAsyncThunk("allPosts", async (postData, thunkAPI) => {
   try {

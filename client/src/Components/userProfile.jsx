@@ -1,30 +1,23 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
-import { useSelector,useDispatch } from "react-redux";
-import { getUser } from "../Api/userApi";
+import { useSelector } from "react-redux";
 
-const UserProfile = () => {
-  const user = useSelector((state) => state.user.user);
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    dispatch(getUser());
-  }, [dispatch]);
-
+const UserProfile = (props) => {
+  const user = useSelector((state) =>
+    props.user === "userProfile"
+      ? state.userProfile.userProfile
+      : state.user.user
+  );
 
   if (!user) {
-    return (
-      <div className="w-full md:w-[340px] flex justify-center items-center">
-        <span className="loader"></span>
-      </div>
-    ); //* Handle case when user data is not available
+    return <div></div>;
   }
 
   return (
     <section className="top-0 md:top-[80px] bg-foreground h-[420px] w-[100%] p-[15px] md:w-[340px] rounded-[12px] md:sticky ">
       <div className="w-full flex flex-row justify-between items-center">
         <div className="flex gap-3 items-center">
-          <Link>
+          <Link to={`/profile/${user._id}`}>
             <img
               src={user.picturePath}
               alt=""
@@ -32,7 +25,10 @@ const UserProfile = () => {
             />
           </Link>
           <div className="">
-            <Link className="text-title text-[15px] font-bold">
+            <Link
+              to={`/profile/${user._id}`}
+              className="text-title text-[15px] font-bold"
+            >
               {user.firstName} {user.lastName}
             </Link>
             <p className="text-text text-[13px]">
@@ -40,7 +36,9 @@ const UserProfile = () => {
             </p>
           </div>
         </div>
-        <i className="bx bx-user text-text text-[18px] cursor-pointer transition-colors duration-100 hover:text-primary"></i>
+        <Link to={`/profile/${user._id}`}>
+          <i className="bx bx-user text-text text-[18px] cursor-pointer transition-colors duration-100 hover:text-primary"></i>
+        </Link>
       </div>
       <hr className="h-[2px] border-none bg-background my-[15px]" />
       <div className="flex items-center gap-4 mb-[10px]">

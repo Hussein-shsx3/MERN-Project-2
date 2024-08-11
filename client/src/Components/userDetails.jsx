@@ -1,10 +1,10 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-const UserDetails = ( props ) => {
+const UserDetails = (props) => {
   return (
     <div className="flex gap-2 items-center mb-[16px]">
-      <Link>
+      <Link to={`/profile/${props.userId}`}>
         <img
           src={`${props.picturePath}`}
           alt=""
@@ -12,7 +12,10 @@ const UserDetails = ( props ) => {
         />
       </Link>
       <div className="">
-        <Link className="text-title text-[15px] font-bold">
+        <Link
+          to={`/profile/${props.userId}`}
+          className="text-title text-[15px] font-bold"
+        >
           {props.firstName} {props.lastName}
         </Link>
         <p className="text-text text-[13px]">{props.location}</p>

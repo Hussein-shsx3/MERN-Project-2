@@ -2,10 +2,18 @@ import React from "react";
 import UserDetails from "./userDetails";
 import { useDispatch, useSelector } from "react-redux";
 import { acceptRequest, ignoreRequest } from "../Api/friendRequestApi";
+import { useParams } from "react-router-dom";
 
-const FriendRequest = () => {
-  const user = useSelector((state) => state.user.user);
+const FriendRequest = (props) => {
+  const { userId } = useParams();
+  console.log(userId);
+  const user = useSelector((state) =>
+    props.user === "userProfile"
+      ? state.userProfile.userProfile
+      : state.user.user
+  );
   const dispatch = useDispatch();
+  const myProfile = useSelector((state) => state.user.user);
 
   const handleAccept = (e) => {
     dispatch(acceptRequest(e));
@@ -15,18 +23,15 @@ const FriendRequest = () => {
     dispatch(ignoreRequest(e));
   };
 
-  if (!user) {
-    return (
-      <div className="w-full h-[45px] flex justify-center">
-        <span className="loader"></span>
-      </div>
-    ); //* Handle case when user data is not available
+  if (!user || !myProfile) {
+    return <div></div>;
   }
 
   const showFriendRequests = user.friendRequests.map((friend) => {
     return (
       <div key={friend._id} className="flex items-center">
         <UserDetails
+          userId={friend._id}
           picturePath={friend.picturePath}
           firstName={friend.firstName}
           lastName={friend.lastName}
@@ -44,16 +49,24 @@ const FriendRequest = () => {
     );
   });
 
-  return (
-    <section className="sticky top-[470px] bottom-0 bg-foreground w-[95%] max-h-[30dvh] p-[15px] md:w-[340px] min-w-[300px] rounded-[12px] overflow-hidden hover:overflow-y-scroll scrollHidden hidden flex-col xl:flex">
-      <div className="flex justify-between items-center">
-        <h1 className="text-title">Friend Requests</h1>
-        <p className="text-text">{user.friendRequests.length}</p>
-      </div>
-      <hr className="w-full h-[2px] border-none bg-background my-[20px]" />
-      {showFriendRequests}
-    </section>
-  );
+  const container = () => {
+    return (
+      <section className="sticky top-[470px] bottom-0 bg-foreground w-[95%] max-h-[30dvh] p-[15px] md:w-[340px] min-w-[300px] rounded-[12px] overflow-hidden hover:overflow-y-scroll scrollHidden hidden flex-col xl:flex">
+        <div className="flex justify-between items-center">
+          <h1 className="text-title">Friend Requests</h1>
+          <p className="text-text">{user.friendRequests.length}</p>
+        </div>
+        <hr className="w-full h-[2px] border-none bg-background my-[20px]" />
+        {showFriendRequests}
+      </section>
+    );
+  };
+
+  return userId !== undefined
+    ? userId === myProfile._id
+      ? container()
+      : ""
+    : container();
 };
 
 export default FriendRequest;

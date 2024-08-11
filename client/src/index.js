@@ -5,6 +5,7 @@ import "./index.css";
 import SignIn from "./Pages/signIn";
 import SignUp from "./Pages/signUp";
 import IsVerified from "./Components/isVerified";
+import Profile from "./Pages/profile";
 //* redux toolkit
 import { storeApp } from "./Store";
 import { Provider } from "react-redux";
@@ -26,6 +27,10 @@ const router = createBrowserRouter([
   {
     path: "/isVerified/:userId",
     element: <IsVerified />,
+  },
+  {
+    path: "/profile/:userId",
+    element: <Profile />,
   },
 ]);
 

@@ -10,7 +10,6 @@ const IsVerified = () => {
   const theme = useSelector((state) => state.theme);
   const dispatch = useDispatch();
 
-  console.log(userId);
   const handleSubmit = () => {
     dispatch(isVerified(userId));
   };

@@ -20,11 +20,10 @@ router.post("/", auth, async (req, res, next) => {
   }
 });
 
-//* Get all Posts for one user
-router.get("/", auth, async (req, res, next) => {
+//* Get all Posts
+router.get("/allPosts", auth, async (req, res, next) => {
   try {
-    const findUser = await User.findById(req.user.id);
-    const findAllPosts = await Post.find({ user: findUser })
+    const findAllPosts = await Post.find()
       .populate({
         path: "user",
         select:
@@ -43,10 +42,10 @@ router.get("/", auth, async (req, res, next) => {
   }
 });
 
-//* Get all Posts
-router.get("/allPosts", auth, async (req, res, next) => {
+//* Get all Posts for one user
+router.get("/:userId", auth, async (req, res, next) => {
   try {
-    const findAllPosts = await Post.find()
+    const findAllPosts = await Post.find({ user: req.params.userId })
       .populate({
         path: "user",
         select:

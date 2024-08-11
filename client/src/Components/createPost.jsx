@@ -1,9 +1,9 @@
-import React, {  useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { createPost } from "../Api/postsApi";
 import axios from "axios";
 
-const CreatePost = () => {
+const CreatePost = (props) => {
   const inputRef = useRef(null);
   const [imageUrl, setImageUrl] = useState("");
   const [loading, setLoading] = useState(false);
@@ -11,9 +11,16 @@ const CreatePost = () => {
     description: "",
     postImage: "",
   });
+  
   const MAX_FILE_SIZE = 2 * 1024 * 1024; // 2MB
 
-  const user = useSelector((state) => state.user.user);
+  const user = useSelector((state) =>
+    props.user === "userProfile"
+      ? state.userProfile.userProfile
+      : state.user.user
+  );
+
+  const myProfile = useSelector((state) => state.user.user);
   const dispatch = useDispatch();
 
   const handleFileChange = (e) => {
@@ -65,17 +72,20 @@ const CreatePost = () => {
     }
   };
 
-  if (!user) {
+  if (!user || !myProfile) {
     return (
       <div className="w-full md:w-[340px] flex justify-center items-center">
         <span className="loader"></span>
       </div>
     ); //* Handle case when user data is not available
   }
-
   return (
     <form
-      className="w-full bg-foreground p-[15px] rounded-[12px]"
+      className={`w-full bg-foreground p-[15px] rounded-[12px] mb-5 ${
+        props.user === "userProfile" && user._id !== myProfile._id
+          ? "hidden"
+          : ""
+      }`}
       onSubmit={handleSubmit}
     >
       <div className="flex justify-between gap-2">

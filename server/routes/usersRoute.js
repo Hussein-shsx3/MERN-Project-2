@@ -41,6 +41,27 @@ router.get("/", auth, async (req, res, next) => {
   }
 });
 
+//* Get user profile
+router.get("/:userId", auth, async (req, res, next) => {
+  try {
+    //* Find user
+    const findUser = await User.findById(req.params.userId)
+      .populate({
+        path: "friendRequests",
+      })
+      .populate({
+        path: "friends",
+      });
+    if (!findUser) {
+      return res.status(404).send("Users not found!");
+    } else {
+      return res.status(200).json(findUser);
+    }
+  } catch (err) {
+    next(err);
+  }
+});
+
 //* Update user
 router.put("/", auth, async (req, res, next) => {
   const hashedPassword = await bcrypt.hash(req.body.password, 10);
