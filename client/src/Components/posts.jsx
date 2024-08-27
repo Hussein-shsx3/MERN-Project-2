@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useReducer, useState } from "react";
 import UserDetails from "./userDetails";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -14,6 +14,8 @@ import { useParams } from "react-router-dom";
 
 const Posts = (props) => {
   const { userId } = useParams();
+
+  const [refreshReducer, forceUpdate] = useReducer((x) => x + 1, 0);
 
   const dispatch = useDispatch();
   const posts = useSelector((state) =>
@@ -32,41 +34,37 @@ const Posts = (props) => {
     props.postType === "allPosts"
       ? dispatch(getAllPosts())
       : dispatch(getUserPosts(userId));
-  }, [
-    dispatch,
-    props.postType,
-    userId,
-    addFriend,
-    removeMyFriend,
-    deleteThePost,
-    likeToogles,
-    commentToggle,
-    commentPost,
-  ]);
+  }, [dispatch, props.postType, userId, refreshReducer]);
 
   const addFriend = (friendId) => {
     dispatch(sendRequest(friendId));
+    forceUpdate();
   };
 
   const removeMyFriend = (friendId) => {
     dispatch(removeFriend(friendId));
+    forceUpdate();
   };
 
   const deleteThePost = (postId) => {
     dispatch(deletePost(postId));
+    forceUpdate();
   };
 
   const likeToogles = (postId) => {
     dispatch(likeToogle(postId));
+    forceUpdate();
   };
 
   const commentToggle = (postId) => {
     document.getElementById(`comments-${postId}`).classList.toggle("hidden");
+    forceUpdate();
   };
 
   const commentPost = (e) => {
     e.preventDefault();
     dispatch(createComment(commentData));
+    forceUpdate();
   };
 
   if (!user || !posts || userStatus === "loading" || postStatus === "loading") {
