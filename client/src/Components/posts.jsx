@@ -32,7 +32,17 @@ const Posts = (props) => {
     props.postType === "allPosts"
       ? dispatch(getAllPosts())
       : dispatch(getUserPosts(userId));
-  }, [dispatch, props.postType, userId]);
+  }, [
+    dispatch,
+    props.postType,
+    userId,
+    addFriend,
+    removeMyFriend,
+    deleteThePost,
+    likeToogles,
+    commentToggle,
+    commentPost,
+  ]);
 
   const addFriend = (friendId) => {
     dispatch(sendRequest(friendId));
@@ -46,8 +56,7 @@ const Posts = (props) => {
     dispatch(deletePost(postId));
   };
 
-  const likeToogles = (postId,e) => {
-    e.preventDefault();
+  const likeToogles = (postId) => {
     dispatch(likeToogle(postId));
   };
 
