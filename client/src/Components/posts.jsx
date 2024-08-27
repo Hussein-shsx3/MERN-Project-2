@@ -38,17 +38,14 @@ const Posts = (props) => {
 
   const addFriend = (friendId) => {
     dispatch(sendRequest(friendId));
-    forceUpdate();
   };
 
   const removeMyFriend = (friendId) => {
     dispatch(removeFriend(friendId));
-    forceUpdate();
   };
 
   const deleteThePost = (postId) => {
     dispatch(deletePost(postId));
-    forceUpdate();
   };
 
   const likeToogles = (postId) => {
@@ -58,13 +55,11 @@ const Posts = (props) => {
 
   const commentToggle = (postId) => {
     document.getElementById(`comments-${postId}`).classList.toggle("hidden");
-    forceUpdate();
   };
 
   const commentPost = (e) => {
     e.preventDefault();
     dispatch(createComment(commentData));
-    forceUpdate();
   };
 
   if (!user || !posts || userStatus === "loading" || postStatus === "loading") {
