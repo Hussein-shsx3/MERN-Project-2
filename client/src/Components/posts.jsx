@@ -15,7 +15,7 @@ import { useParams } from "react-router-dom";
 const Posts = (props) => {
   const { userId } = useParams();
 
-  const [refreshReducer, forceUpdate] = useReducer((x) => x + 1, 0);
+  const [refresh, counter] = useReducer((x) => x + 1, 0);
 
   const dispatch = useDispatch();
   const posts = useSelector((state) =>
@@ -34,32 +34,37 @@ const Posts = (props) => {
     props.postType === "allPosts"
       ? dispatch(getAllPosts())
       : dispatch(getUserPosts(userId));
-  }, [dispatch, props.postType, userId, refreshReducer]);
+  }, [dispatch, props.postType, userId, refresh]);
 
   const addFriend = (friendId) => {
     dispatch(sendRequest(friendId));
+    counter();
   };
 
   const removeMyFriend = (friendId) => {
     dispatch(removeFriend(friendId));
+    counter();
   };
 
   const deleteThePost = (postId) => {
     dispatch(deletePost(postId));
+    counter();
   };
 
   const likeToogles = (postId) => {
     dispatch(likeToogle(postId));
-    forceUpdate();
+    counter();
   };
 
   const commentToggle = (postId) => {
     document.getElementById(`comments-${postId}`).classList.toggle("hidden");
+    counter();
   };
 
   const commentPost = (e) => {
     e.preventDefault();
     dispatch(createComment(commentData));
+    counter();
   };
 
   if (!user || !posts || userStatus === "loading" || postStatus === "loading") {
