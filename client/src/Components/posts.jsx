@@ -47,6 +47,7 @@ const Posts = (props) => {
   };
 
   const likeToogles = (postId) => {
+    e.preventDefault();
     dispatch(likeToogle(postId));
   };
 
