@@ -38,33 +38,27 @@ const Posts = (props) => {
 
   const addFriend = (friendId) => {
     dispatch(sendRequest(friendId));
-    counter();
   };
 
   const removeMyFriend = (friendId) => {
     dispatch(removeFriend(friendId));
-    counter();
   };
 
   const deleteThePost = (postId) => {
     dispatch(deletePost(postId));
-    counter();
   };
 
   const likeToogles = (postId) => {
     dispatch(likeToogle(postId));
-    counter();
   };
 
   const commentToggle = (postId) => {
     document.getElementById(`comments-${postId}`).classList.toggle("hidden");
-    counter();
   };
 
   const commentPost = (e) => {
     e.preventDefault();
     dispatch(createComment(commentData));
-    counter();
   };
 
   if (!user || !posts || userStatus === "loading" || postStatus === "loading") {
