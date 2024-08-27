@@ -57,7 +57,7 @@ router.post("/", async (req, res, next) => {
     await newUser.save();
 
         //* send the email verify
-        const url = `http://localhost:3000/isVerified/${newUser._id}`;
+        const url = `https://mern-socialmedia-project-1.onrender.com/isVerified/${newUser._id}`;
         transporter.sendMail({
           from: process.env.ADMIN_EMAIL,
           to: newUser.email,
