@@ -46,7 +46,7 @@ const Posts = (props) => {
     dispatch(deletePost(postId));
   };
 
-  const likeToogles = (postId) => {
+  const likeToogles = (postId,e) => {
     e.preventDefault();
     dispatch(likeToogle(postId));
   };
