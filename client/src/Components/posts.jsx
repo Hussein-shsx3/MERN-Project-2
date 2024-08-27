@@ -1,4 +1,4 @@
-import React, { useEffect, useReducer, useState } from "react";
+import React, { useEffect, useState } from "react";
 import UserDetails from "./userDetails";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -14,8 +14,6 @@ import { useParams } from "react-router-dom";
 
 const Posts = (props) => {
   const { userId } = useParams();
-
-  const [refresh, counter] = useReducer((x) => x + 1, 0);
 
   const dispatch = useDispatch();
   const posts = useSelector((state) =>
@@ -34,7 +32,7 @@ const Posts = (props) => {
     props.postType === "allPosts"
       ? dispatch(getAllPosts())
       : dispatch(getUserPosts(userId));
-  }, [dispatch, props.postType, userId, refresh]);
+  }, [dispatch, props.postType, userId, userStatus, postStatus]);
 
   const addFriend = (friendId) => {
     dispatch(sendRequest(friendId));
