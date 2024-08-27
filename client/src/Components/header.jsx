@@ -2,8 +2,10 @@ import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { logout } from "../redux/authSlice";
 import { setMode } from "../redux/themeSlice";
+import { useNavigate } from "react-router-dom";
 
 const Header = () => {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const theme = useSelector((state) => state.theme);
   const toggleTheme = () => {
@@ -12,7 +14,7 @@ const Header = () => {
 
   const logOut = () => {
     dispatch(logout());
-    window.location.pathname = "/signIn";
+    navigate("/signIn");
   };
 
   const showList = () => {
