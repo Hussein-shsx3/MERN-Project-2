@@ -16,7 +16,10 @@ const app = express();
 app.use(express.json());
 app.use(
   cors({
-    origin: ["https://mern-socialmedia-project-1.onrender.com"],
+    origin: [
+      "http://localhost:3000", 
+      "https://mern-socialmedia-project-1.onrender.com",
+    ],
     credentials: true,
   })
 );

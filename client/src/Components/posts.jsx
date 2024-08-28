@@ -32,7 +32,7 @@ const Posts = (props) => {
     props.postType === "allPosts"
       ? dispatch(getAllPosts())
       : dispatch(getUserPosts(userId));
-  }, [dispatch, props.postType, userId, userStatus, postStatus]);
+  }, [dispatch, props.postType, userId]);
 
   const addFriend = (friendId) => {
     dispatch(sendRequest(friendId));
