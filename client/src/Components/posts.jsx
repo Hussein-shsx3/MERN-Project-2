@@ -59,12 +59,7 @@ const Posts = (props) => {
   };
 
   const commentToggle = (postId) => {
-    document
-      .getElementById(`comments-${postId}`)
-      .classList.toggle("hidden")
-      .then(() => {
-        counter();
-      });
+    document.getElementById(`comments-${postId}`).classList.toggle("hidden");
   };
 
   const commentPost = (e) => {
