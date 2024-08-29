@@ -9,7 +9,6 @@ import FriendRequest from "./Components/friendRequest";
 import CreatePost from "./Components/createPost";
 import Posts from "./Components/posts";
 import { getUser } from "./Api/userApi";
-import Loading from "./Components/loading";
 
 const App = () => {
   const cookies = new Cookies();
@@ -28,10 +27,6 @@ const App = () => {
       document.location.pathname = "/signIn";
     }
   }, [isVerified, token, status]);
-
-  if (status === "loading") {
-    return <Loading />;
-  }
 
   return (
     <section

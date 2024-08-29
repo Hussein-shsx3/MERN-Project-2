@@ -1,11 +1,15 @@
-import React from "react";
+import React, { useEffect, useReducer } from "react";
 import UserDetails from "./userDetails";
 import { useDispatch, useSelector } from "react-redux";
 import { removeFriend } from "../Api/friendRequestApi";
+import { getUser } from "../Api/userApi";
+import { getAllPosts } from "../Api/postsApi";
 import { useParams } from "react-router-dom";
 
 const Friends = (props) => {
   const { userId } = useParams();
+
+  const [refresh, counter] = useReducer((x) => x + 1, 0);
 
   const user = useSelector((state) =>
     props.user === "userProfile"
@@ -14,14 +18,19 @@ const Friends = (props) => {
   );
   const dispatch = useDispatch();
   const myProfile = useSelector((state) => state.user.user);
-  const userStatus = useSelector((state) => state.user.status);
-  const postStatus = useSelector((state) => state.post.status);
+
+  useEffect(() => {
+    dispatch(getUser());
+    dispatch(getAllPosts());
+  }, [dispatch, refresh]);
 
   const handleRemove = async (id) => {
-    dispatch(removeFriend(id));
+    dispatch(removeFriend(id)).then(() => {
+      counter();
+    });
   };
 
-  if (!user || userStatus === "loading" || postStatus === "loading") {
+  if (!user) {
     return <div></div>;
   }
 

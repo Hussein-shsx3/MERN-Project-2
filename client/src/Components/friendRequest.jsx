@@ -1,11 +1,15 @@
-import React from "react";
+import React, { useEffect, useReducer } from "react";
 import UserDetails from "./userDetails";
 import { useDispatch, useSelector } from "react-redux";
 import { acceptRequest, ignoreRequest } from "../Api/friendRequestApi";
+import { getUser } from "../Api/userApi";
 import { useParams } from "react-router-dom";
 
 const FriendRequest = (props) => {
   const { userId } = useParams();
+
+  const [refresh, counter] = useReducer((x) => x + 1, 0);
+
   const user = useSelector((state) =>
     props.user === "userProfile"
       ? state.userProfile.userProfile
@@ -13,18 +17,24 @@ const FriendRequest = (props) => {
   );
   const dispatch = useDispatch();
   const myProfile = useSelector((state) => state.user.user);
-  const userStatus = useSelector((state) => state.user.status);
-  const postStatus = useSelector((state) => state.post.status);
+
+  useEffect(() => {
+    dispatch(getUser());
+  }, [dispatch, refresh]);
 
   const handleAccept = (e) => {
-    dispatch(acceptRequest(e));
+    dispatch(acceptRequest(e)).then(() => {
+      counter();
+    });
   };
 
   const handleIgnore = (e) => {
-    dispatch(ignoreRequest(e));
+    dispatch(ignoreRequest(e)).then(() => {
+      counter();
+    });
   };
 
-  if (!user || userStatus === "loading" || postStatus === "loading") {
+  if (!user) {
     return <div></div>;
   }
 

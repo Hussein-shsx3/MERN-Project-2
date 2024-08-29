@@ -1,10 +1,14 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useReducer, useRef, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { createPost } from "../Api/postsApi";
+import { getAllPosts } from "../Api/postsApi";
 import axios from "axios";
 
 const CreatePost = (props) => {
   const inputRef = useRef(null);
+
+  const [refresh, counter] = useReducer((x) => x + 1, 0);
+
   const [imageUrl, setImageUrl] = useState("");
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
@@ -21,9 +25,11 @@ const CreatePost = (props) => {
   );
 
   const myProfile = useSelector((state) => state.user.user);
-  const userStatus = useSelector((state) => state.user.status);
-  const postStatus = useSelector((state) => state.post.status);
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getAllPosts());
+  }, [dispatch, refresh]);
 
   const handleFileChange = (e) => {
     const imageFile = e.target.files[0];
@@ -66,15 +72,19 @@ const CreatePost = (props) => {
       if (postImage) {
         dispatch(createPost({ ...formData, postImage }));
         setImageUrl("");
+        document.getElementById("input").value = "";
       } else {
         console.log("error uploading file");
       }
     } else {
-      dispatch(createPost(formData));
+      dispatch(createPost(formData)).then(() => {
+        counter();
+        document.getElementById("input").value = "";
+      });
     }
   };
 
-  if (!user || userStatus === "loading" || postStatus === "loading") {
+  if (!user) {
     return <div></div>;
   }
   return (
@@ -93,6 +103,7 @@ const CreatePost = (props) => {
           className="w-[45px] h-[45px] rounded-[100%] object-cover"
         />
         <input
+          id="input"
           type="text"
           placeholder="What's on your mind..."
           className="w-[90%] bg-background rounded-[20px] px-5 text-[14px] outline-none text-text"

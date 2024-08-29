@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useReducer, useState } from "react";
 import UserDetails from "./userDetails";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -15,13 +15,13 @@ import { useParams } from "react-router-dom";
 const Posts = (props) => {
   const { userId } = useParams();
 
+  const [refresh, counter] = useReducer((x) => x + 1, 0);
+
   const dispatch = useDispatch();
   const posts = useSelector((state) =>
     props.postType === "allPosts" ? state.post.allPosts : state.post.userPosts
   );
   const user = useSelector((state) => state.user.user);
-  const userStatus = useSelector((state) => state.user.status);
-  const postStatus = useSelector((state) => state.post.status);
 
   const [commentData, setCommentData] = useState({
     postId: "",
@@ -32,34 +32,49 @@ const Posts = (props) => {
     props.postType === "allPosts"
       ? dispatch(getAllPosts())
       : dispatch(getUserPosts(userId));
-  }, [dispatch, props.postType, userId]);
+  }, [dispatch, props.postType, userId, refresh]);
 
   const addFriend = (friendId) => {
-    dispatch(sendRequest(friendId));
+    dispatch(sendRequest(friendId)).then(() => {
+      counter();
+    });
   };
 
   const removeMyFriend = (friendId) => {
-    dispatch(removeFriend(friendId));
+    dispatch(removeFriend(friendId)).then(() => {
+      counter();
+    });
   };
 
   const deleteThePost = (postId) => {
-    dispatch(deletePost(postId));
+    dispatch(deletePost(postId)).then(() => {
+      counter();
+    });
   };
 
   const likeToogles = (postId) => {
-    dispatch(likeToogle(postId));
+    dispatch(likeToogle(postId)).then(() => {
+      counter();
+    });
   };
 
   const commentToggle = (postId) => {
-    document.getElementById(`comments-${postId}`).classList.toggle("hidden");
+    document
+      .getElementById(`comments-${postId}`)
+      .classList.toggle("hidden")
+      .then(() => {
+        counter();
+      });
   };
 
   const commentPost = (e) => {
     e.preventDefault();
-    dispatch(createComment(commentData));
+    dispatch(createComment(commentData)).then(() => {
+      counter();
+    });
   };
 
-  if (!user || !posts || userStatus === "loading" || postStatus === "loading") {
+  if (!user || !posts) {
     return <div></div>;
   }
 

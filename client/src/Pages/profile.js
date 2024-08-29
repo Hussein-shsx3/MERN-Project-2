@@ -8,7 +8,6 @@ import CreatePost from "../Components/createPost";
 import Posts from "../Components/posts";
 import FriendRequest from "../Components/friendRequest";
 import Friends from "../Components/friends";
-import Loading from "../Components/loading";
 import { getUser, getUserProfile } from "../Api/userApi";
 import { useParams } from "react-router-dom";
 
@@ -31,10 +30,6 @@ const Profile = () => {
       document.location.pathname = "/signIn";
     }
   }, [isVerified, token, status]);
-
-  if (status === "loading") {
-    return <Loading />;
-  }
 
   return (
     <section

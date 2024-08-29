@@ -8,10 +8,8 @@ const UserProfile = (props) => {
       ? state.userProfile.userProfile
       : state.user.user
   );
-  const userStatus = useSelector((state) => state.user.status);
-  const postStatus = useSelector((state) => state.post.status);
 
-  if (!user || userStatus === "loading" || postStatus === "loading") {
+  if (!user) {
     return <div></div>;
   }
 
